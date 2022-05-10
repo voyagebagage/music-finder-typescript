@@ -2,7 +2,6 @@ import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import { Link, Outlet, Params, useLocation, useParams } from "react-router-dom";
 import "./App.css";
-import ResList from "./components/ResList";
 import SuggestionsDisplay from "./components/SuggestionsDisplay";
 import {
   Artist,

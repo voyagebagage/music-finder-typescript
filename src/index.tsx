@@ -5,11 +5,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import App from "./App";
 //pages
 import ArtistPreview from "./container/ArtistPreview";
-import Songs from "./container/Songs";
 import SongPreview from "./container/SongPreview";
 import Song from "./container/Song";
 import Artist from "./container/Artist";
-import ItemLayout from "./container/ItemLayout";
 // import Lyrics from "./components/Lyrics";
 import Albums from "./container/Albums";
 import Top5 from "./container/Top5";
