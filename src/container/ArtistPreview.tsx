@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { Link, Params, useLocation, useParams } from "react-router-dom";
-import { Artist, LocationStateCustom } from "../Model";
+// import React, { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { LocationStateCustom } from "../Model";
 
 // import { Artist } from "../Model";
 

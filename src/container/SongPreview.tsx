@@ -1,6 +1,5 @@
-import React from "react";
 import { useLocation, Link } from "react-router-dom";
-import { LocationStateCustom, Song } from "../Model";
+import { LocationStateCustom } from "../Model";
 
 type Props = {};
 
