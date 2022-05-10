@@ -1,14 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Artist, LocationParams, Song } from "../Model";
+import { Artist, Song } from "../Model";
 import "../App.css";
-import {
-  Link,
-  NavLink,
-  useNavigate,
-  Outlet,
-  useParams,
-  Params,
-} from "react-router-dom";
+import { useNavigate, useParams, Params } from "react-router-dom";
 
 type Props = {
   artistList: Artist[];

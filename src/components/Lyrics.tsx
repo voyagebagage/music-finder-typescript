@@ -10,14 +10,14 @@ const Lyrics = ({ artist, title }: Props) => {
   useEffect(() => {
     try {
       const fetchLyrics: Function = async () => {
-        let myHeaders = new Headers();
+        // let myHeaders = new Headers();
 
-        let myInit = {
-          method: "GET",
-          headers: myHeaders,
-          mode: "cors",
-          cache: "default",
-        };
+        // let myInit = {
+        //   method: "GET",
+        //   headers: myHeaders,
+        //   mode: "cors",
+        //   cache: "default",
+        // };
 
         const response = await fetch(
           `https://api.lyrics.ovh/v1/${artist}/${title}`,

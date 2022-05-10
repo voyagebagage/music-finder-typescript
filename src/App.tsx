@@ -1,15 +1,8 @@
-import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import { Link, Outlet, Params, useLocation, useParams } from "react-router-dom";
 import "./App.css";
 import SuggestionsDisplay from "./components/SuggestionsDisplay";
-import {
-  Artist,
-  LocationParams,
-  LocationStateCustom,
-  Song,
-  Suggestions,
-} from "./Model";
+import { Artist, Song } from "./Model";
 
 type Props = {
   artistPreview: any;

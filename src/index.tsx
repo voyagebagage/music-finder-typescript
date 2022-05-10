@@ -8,7 +8,6 @@ import ArtistPreview from "./container/ArtistPreview";
 import SongPreview from "./container/SongPreview";
 import Song from "./container/Song";
 import Artist from "./container/Artist";
-// import Lyrics from "./components/Lyrics";
 import Albums from "./container/Albums";
 import Top5 from "./container/Top5";
 import LastReleases from "./container/LastReleases";
