@@ -41,11 +41,14 @@ export interface Song {
 }
 export interface LocationStateCustom {
   artistListRes: Artist;
+  uncompleteArtistInfo: Artist;
   artistInfo: Artist;
   songInfo: Song;
   url: string;
   artistName: string;
   trackName: string;
+  isLoading: boolean;
+  finishLoading: boolean;
 }
 export interface LocationParams {
   pathname: string;

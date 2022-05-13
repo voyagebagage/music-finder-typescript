@@ -3,6 +3,7 @@ import { Link, Outlet, Params, useLocation, useParams } from "react-router-dom";
 import "./App.css";
 import SuggestionsDisplay from "./components/SuggestionsDisplay";
 import { Artist, Song } from "./Model";
+import useLoading from "./useLoading";
 
 type Props = {
   artistPreview: any;
@@ -14,20 +15,17 @@ function App({ artistPreview, songPreview }: Props) {
   const [textInput, setTextInput] = useState<String>("");
   const [artistList, setArtistList] = useState<Array<Artist>>([]);
   const [songList, setSongList] = useState<Array<Song>>([]);
-  // const [suggestionsArtist, setSuggestionsArtist] = useState<Array<string>>([]);
-  // const [suggestionsSong, setSuggestionsSong] = useState<Array<string>>([]);
-  const [artistInfo, setArtistInfo] = useState<Artist>({});
 
   let location = useLocation();
   const pathname = location.pathname as string;
   let params = useParams<Params<string>>();
   const inputRef = useRef<HTMLInputElement>(null);
-
+  const { isLoading, setIsLoading } = useLoading();
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `https://itunes.apple.com/search?term=${search}`,
+          `https://itunes.apple.com/search?term=${search}&limit=200`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -40,26 +38,17 @@ function App({ artistPreview, songPreview }: Props) {
         const artistMatch: Artist[] = await res.results.filter((r: any) =>
           r.artistName.includes(search)
         );
-        // let uniqArtistMatch: any = [...new Set(artistMatch)];
-        // console.log("uniqArtistMatch", uniqArtistMatch);
-
         const uniqArtistList: any[] = [
           ...new Map(artistMatch.map((r: any) => [r["artistId"], r])).values(),
         ];
         console.log("uniqArtistList", uniqArtistList);
 
         //set Artist list
-        setArtistList(uniqArtistList);
-
-        //set suggestions for artists
-        // setSuggestionsArtist(
-        //   uniqArtistList.map((name: any) => name.artistName)
-        // );
+        setArtistList(uniqArtistList.slice(0, 6));
 
         const songMatch: Song[] = await res.results.filter((r: any) =>
           r.trackName.includes(search)
         );
-        console.log("songMatch0", songMatch);
 
         let uniqTrackList: any[] = [
           ...new Map(
@@ -69,10 +58,9 @@ function App({ artistPreview, songPreview }: Props) {
         console.log(uniqTrackList, "uniqTrackList");
 
         //set Song list
-        setSongList(uniqTrackList);
+        setSongList(uniqTrackList.slice(0, 7));
 
-        // Set suggestions for tracks
-        // setSuggestionsSong(uniqTrackList.map((song: any) => song.trackName));
+        setIsLoading(false);
       } catch (e: any) {
         console.log("Error @ search:  ", e);
       }
@@ -85,6 +73,7 @@ function App({ artistPreview, songPreview }: Props) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    // needs to have capital letter for eac word of the search
     if (textInput) {
       let myTextInput: string[] = textInput.split(" ");
       let element: string[] = [];
@@ -108,7 +97,7 @@ function App({ artistPreview, songPreview }: Props) {
           onClick={() => {
             setArtistList([]);
             setSongList([]);
-            setArtistInfo({});
+            // setArtistInfo({});
             setSearch("");
             // setTextInput("");
           }}
@@ -132,14 +121,18 @@ function App({ artistPreview, songPreview }: Props) {
       pathname.includes(`/song/${params.songId}`) ? (
         <Outlet />
       ) : songList.length || artistList.length ? (
-        <SuggestionsDisplay
-          artistList={artistList}
-          songList={songList}
-          artistPreview={artistPreview}
-          songPreview={songPreview}
-          artistInfo={artistInfo}
-          setArtistInfo={setArtistInfo}
-        />
+        !isLoading ? (
+          <SuggestionsDisplay
+            artistList={artistList}
+            songList={songList}
+            artistPreview={artistPreview}
+            songPreview={songPreview}
+            // artistInfo={artistInfo}
+            // setArtistInfo={setArtistInfo}
+          />
+        ) : (
+          <p>Loading app</p>
+        )
       ) : null}
     </div>
   );

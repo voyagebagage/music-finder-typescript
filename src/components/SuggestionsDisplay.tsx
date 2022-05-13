@@ -2,14 +2,15 @@ import React, { useEffect, useState } from "react";
 import { Artist, Song } from "../Model";
 import "../App.css";
 import { useNavigate, useParams, Params } from "react-router-dom";
+import useLoading from "../useLoading";
 
 type Props = {
   artistList: Artist[];
   songList: Song[];
   artistPreview: Artist;
   songPreview: any;
-  artistInfo: Artist;
-  setArtistInfo: React.Dispatch<React.SetStateAction<Artist>>;
+  // artistInfo: Artist;
+  // setArtistInfo: React.Dispatch<React.SetStateAction<Artist>>;
 };
 
 const SuggestionsDisplay = ({
@@ -17,20 +18,25 @@ const SuggestionsDisplay = ({
   songList,
   artistPreview,
   songPreview,
-  artistInfo,
-  setArtistInfo,
-}: Props) => {
+}: // artistInfo,
+// setArtistInfo,
+Props) => {
   let navigate = useNavigate();
   const [show, setShow] = useState<string>("");
   const params = useParams<Params<string>>();
+  const { artistId } = params;
 
-  console.log("PARAMS =>", params);
+  const { isLoading, setIsLoading } = useLoading();
+  // const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [uncompleteArtistInfo, setUncompleteArtistInfo] = useState<Artist>({});
+  const [finishLoading, setFinishLoading] = useState<boolean>(false);
+  console.log("PARAMS =>//////", artistId);
 
   useEffect(() => {
     try {
       const fetchData = async () => {
         const response = await fetch(
-          `https://itunes.apple.com/lookup?id=${params?.artistId}`,
+          `https://itunes.apple.com/lookup?id=${artistId}`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -40,20 +46,19 @@ const SuggestionsDisplay = ({
         );
         const res = await response.json();
 
-        setArtistInfo({
-          ...(await res.results[0]),
-          ...artistList.filter(
-            (e: any) => e.artistId === res.results[0].artistId
-          )[0],
+        setUncompleteArtistInfo({
+          ...res.results[0],
         });
+        setIsLoading(false);
       };
       fetchData();
     } catch (e: any) {
       console.log("Error:  ", e);
     }
-  }, [params.artistId]);
+  }, [artistId]);
+  //
 
-  console.log(" ARTIST INFO INFO", artistInfo);
+  console.log(" ARTIST INFO INFO", finishLoading);
   console.log(" A artistList", artistList);
 
   return (
@@ -65,14 +70,19 @@ const SuggestionsDisplay = ({
           key={artist.artistId}
           onClick={() => {
             setShow("artist");
-            navigate(`preview/${artist.artistId || artistInfo?.artistId}`, {
-              state: {
-                // artistListRes: artistList.filter(
-                //   (e: any) => e.artistId === artist.artistId
-                // )[0],
-                artistInfo,
-              },
-            });
+            navigate(
+              `preview/${artist.artistId || uncompleteArtistInfo?.artistId}`,
+              {
+                state: {
+                  artistListRes: artistList.filter(
+                    (e: any) => e.artistId === artist.artistId
+                  )[0],
+                  uncompleteArtistInfo,
+                  isLoading,
+                  finishLoading,
+                },
+              }
+            );
           }}
         >
           {artist.artistName}
